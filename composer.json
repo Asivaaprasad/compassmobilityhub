@@ -30,7 +30,8 @@
         "drupal/pwa": "^1.5",
         "drupal/admin_toolbar": "^3.1",
         "drupal/fontawesome": "^2.25",
-        "drupal/core-project-message": "9.5.5"
+        "drupal/core-project-message": "9.5.5",
+        "drupal/video": "^3.0"
     },
     "require-dev": {
         "drupal/core-dev": "^9.2"
