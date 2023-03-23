@@ -1,0 +1,174 @@
+<?php
+
+/**
+ *
+ * Animation options.
+ */
+function animate_any_options() {
+  return [
+    'none' => t('-- No animation --'),
+    'Attention seekers' => [
+      'bounce' => t('bounce'),
+      'flash' => t('flash'),
+      'pulse' => t('pulse'),
+      'rubberBand' => t('rubberBand'),
+      'shakeX' => t('shakeX'),
+      'shakeY' => t('shakeY'),
+      'headShake' => t('headShake'),
+      'swing' => t('swing'),
+      'tada' => t('tada'),
+      'wobble' => t('wobble'),
+      'jello' => t('jello'),
+      'heartBeat' => t('heartBeat'),
+    ],
+    'Back entrances' => [
+      'backInDown' => t('backInDown'),
+      'backInLeft' => t('backInLeft'),
+      'backInRight' => t('backInRight'),
+      'backInUp' => t('backInUp'),
+    ],
+    'Back exits' => [
+      'backOutDown' => t('backOutDown'),
+      'backOutLeft' => t('backOutLeft'),
+      'backOutRight' => t('backOutRight'),
+      'backOutUp' => t('backOutUp'),
+    ],
+    'Bouncing entrances' => [
+      'bounceIn' => t('bounceIn'),
+      'bounceInDown' => t('bounceInDown'),
+      'bounceInLeft' => t('bounceInLeft'),
+      'bounceInRight' => t('bounceInRight'),
+      'bounceInUp' => t('bounceInUp'),
+    ],
+    'Bouncing exits' => [
+      'bounceOut' => t('bounceOut'),
+      'bounceOutDown' => t('bounceOutDown'),
+      'bounceOutLeft' => t('bounceOutLeft'),
+      'bounceOutRight' => t('bounceOutRight'),
+      'bounceOutUp' => t('bounceOutUp'),
+    ],
+    'Fading entrances' => [
+      'fadeIn' => t('fadeIn'),
+      'fadeInDown' => t('fadeInDown'),
+      'fadeInDownBig' => t('fadeInDownBig'),
+      'fadeInLeft' => t('fadeInLeft'),
+      'fadeInLeftBig' => t('fadeInLeftBig'),
+      'fadeInRight' => t('fadeInRight'),
+      'fadeInRightBig' => t('fadeInRightBig'),
+      'fadeInUp' => t('fadeInUp'),
+      'fadeInUpBig' => t('fadeInUpBig'),
+      'fadeInTopLeft' => t('fadeInTopLeft'),
+      'fadeInTopRight' => t('fadeInTopRight'),
+      'fadeInBottomLeft' => t('fadeInBottomLeft'),
+      'fadeInBottomRight' => t('fadeInBottomRight'),
+    ],
+    'Fading exits' => [
+      'fadeOut' => t('fadeOut'),
+      'fadeOutDown' => t('fadeOutDown'),
+      'fadeOutDownBig' => t('fadeOutDownBig'),
+      'fadeOutLeft' => t('fadeOutLeft'),
+      'fadeOutLeftBig' => t('fadeOutLeftBig'),
+      'fadeOutRight' => t('fadeOutRight'),
+      'fadeOutRightBig' => t('fadeOutRightBig'),
+      'fadeOutUp' => t('fadeOutUp'),
+      'fadeOutUpBig' => t('fadeOutUpBig'),
+      'fadeOutTopLeft' => t('fadeOutTopLeft'),
+      'fadeOutTopRight' => t('fadeOutTopRight'),
+      'fadeOutBottomRight' => t('fadeOutBottomRight'),
+      'fadeOutBottomLeft' => t('fadeOutBottomLeft'),
+    ],
+    'Flippers' => [
+      'flip' => t('flip'),
+      'flipInX' => t('flipInX'),
+      'flipInY' => t('flipInY'),
+      'flipOutX' => t('flipOutX'),
+      'flipOutY' => t('flipOutY'),
+    ],
+    'Lightspeed' => [
+      'lightSpeedInRight' => t('lightSpeedInRight'),
+      'lightSpeedInLeft' => t('lightSpeedInLeft'),
+      'lightSpeedOutRight' => t('lightSpeedOutRight'),
+      'lightSpeedOutLeft' => t('lightSpeedOutLeft'),
+    ],
+    'Rotating entrances' => [
+      'rotateIn' => t('rotateIn'),
+      'rotateInDownLeft' => t('rotateInDownLeft'),
+      'rotateInDownRight' => t('rotateInDownRight'),
+      'rotateInUpLeft' => t('rotateInUpLeft'),
+      'rotateInUpRight' => t('rotateInUpRight'),
+    ],
+    'Rotating exits' => [
+      'rotateOut' => t('rotateOut'),
+      'rotateOutDownLeft' => t('rotateOutDownLeft'),
+      'rotateOutDownRight' => t('rotateOutDownRight'),
+      'rotateOutUpLeft' => t('rotateOutUpLeft'),
+      'rotateOutUpRight' => t('rotateOutUpRight'),
+    ],
+    'Specials' => [
+      'hinge' => t('hinge'),
+      'jackInTheBox' => t('jackInTheBox'),
+      'rollIn' => t('rollIn'),
+      'rollOut' => t('rollOut'),
+    ],
+    'Zooming entrances' => [
+      'zoomIn' => t('zoomIn'),
+      'zoomInDown' => t('zoomInDown'),
+      'zoomInLeft' => t('zoomInLeft'),
+      'zoomInRight' => t('zoomInRight'),
+      'zoomInUp' => t('zoomInUp'),
+    ],
+    'Zooming exits' => [
+      'zoomOut' => t('zoomOut'),
+      'zoomOutDown' => t('zoomOutDown'),
+      'zoomOutLeft' => t('zoomOutLeft'),
+      'zoomOutRight' => t('zoomOutRight'),
+      'zoomOutUp' => t('zoomOutUp'),
+    ],
+    'Sliding entrances' => [
+      'slideInDown' => t('slideInDown'),
+      'slideInLeft' => t('slideInLeft'),
+      'slideInRight' => t('slideInRight'),
+      'slideInUp' => t('slideInUp'),
+    ],
+    'Sliding exits' => [
+      'slideOutDown' => t('slideOutDown'),
+      'slideOutLeft' => t('slideOutLeft'),
+      'slideOutRight' => t('slideOutRight'),
+      'slideOutUp' => t('slideOutUp'),
+    ],
+  ];
+}
+
+/*
+ * Implements hook_page_attachments().
+ */
+
+function animate_any_page_attachments(&$page) {
+  $connection = \Drupal::database();
+  $fetch = $connection->select("animate_any_settings", "a");
+  $fetch->fields('a');
+  $fetch_results = $fetch->execute()->fetchAll();
+  $json_data = json_encode($fetch_results);
+  // Pass json variable to animate_any.js.
+  $page['#attached']['library'][] = 'animate_any/animate';
+  $page['#attached']['drupalSettings']['animate']['animation_data'] = $json_data;
+}
+
+/**
+ * jQuery event options.
+ */
+function animate_on_event() {
+  return [
+    'none' => t('-- No event --'),
+    'onload' => t('On page load'),
+    'scroll' => t('On page scroll'),
+    'click' => t('Click'),
+    'mouseover' => t('Hover'),
+    'mouseout' => t('Mouse Out'),
+    'mousedown' => t('Mouse Down'),
+    'mouseup' => t('Mouse Up'),
+    'mouseenter' => t('Mouse Enter'),
+    'mouseleave' => t('Mouse Leave'),
+    'mousemove' => t('Mouse Move'),
+  ];
+}

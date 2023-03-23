@@ -1,0 +1,149 @@
+/**
+ * Variables
+ */
+:root {
+  --body-bg: #F2F4FF;
+  --header-bg: #020312;
+  --content-bg: #181a25;
+  --text-color: #a1a1a1;
+  --sidebar-link-color: #cfcfcf;
+  --border-color: #f6f2c0;
+  --pink: #cb9b51;
+  --violet: #f6e27a;
+  --pink-gradient: linear-gradient(to right, #f6e27a, #462523);
+  --circle-color: #cb9b51;
+}
+body {
+  font-family: 'Raleway', sans-serif;
+}
+h1, h2, h3, a {
+  font-family: 'Raleway', sans-serif;
+}
+.site-branding .site-name a {
+  text-transform: capitalize;
+  background-image: linear-gradient(to right,#cb9b51 0,#f6e27a 22%, #B88940 45%,#f6f2c0 50%,#B88940 55%,#f6e27a 78%,#cb9b51 100%);
+  color:transparent;
+  -webkit-background-clip:text;
+}
+.slider ul li h1 {
+  background-image: linear-gradient(to right,#cb9b51 0,#f6e27a 22%, #B88940 45%,#f6f2c0 50%,#B88940 55%,#f6e27a 78%,#cb9b51 100%);
+  color:transparent;
+  -webkit-background-clip:text;
+}
+ul.main-menu > li > a {
+  background-image: linear-gradient(to right,#cb9b51 0,#f6e27a 22%, #B88940 45%,#f6f2c0 50%,#B88940 55%,#f6e27a 78%,#cb9b51 100%);
+  color:transparent;
+  -webkit-background-clip:text;
+}
+ul.main-menu > li a::after {
+  background: linear-gradient(to right, #f6e27a, #462523);
+}
+.search-icon {
+  border-top: 3px solid #f6e27a;
+  border-left: 3px solid #f6e27a;
+  border-bottom: 3px solid #cb9b51;
+  border-right: 3px solid #cb9b51;
+}
+ul.social-icons li a {
+  border-top: 3px solid #f6e27a;
+  border-left: 3px solid #f6e27a;
+  border-bottom: 3px solid #cb9b51;
+  border-right: 3px solid #cb9b51;
+}
+.button-link {
+  border-color: #f6e27a;
+}
+h2.node-title, h2.block-title {
+  background-image: linear-gradient(to right,#cb9b51 0,#f6e27a 22%, #B88940 45%,#f6f2c0 50%,#B88940 55%,#f6e27a 78%,#cb9b51 100%);
+  color:transparent;
+  -webkit-background-clip:text;
+}
+a {
+  border-color: #f6e27a;
+  color: #cb9b51;
+}
+a:hover {
+  color: #f6e27a;
+}
+h3 {
+  color: #2E1B72;
+}
+.homepage-content .block {
+  padding-top: 0;
+}
+#spb-block-contactblock .spb_center {
+  margin-top: -200px;
+  padding: 10px 20px;
+  background: #181A25;
+}
+#spb-block-contactblock .spb_close {
+  color: #a1a1a1;
+  background: transparent;
+  border: none;
+}
+#spb-block-contactblock .contact-message-form {
+  padding: 0;
+}
+.views_slideshow_cycle_main .views_slideshow_cycle_slide {
+  width: 100% !important;
+  text-align: center;
+  padding: 30px;
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  box-shadow: 1px 2px #888888;
+  color: #fff;
+  height: auto !important;
+}
+form label {
+  color: #a1a1a1;
+}
+form#contact-message-contact-us-form input {
+  width: 100%;
+}
+.more-link {
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+}
+.more-link a {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  padding: 0.6em 1em;
+  color: #fff;
+  font-weight: 900;
+}
+li.node-readmore a {
+  border-color: #f6e27a;
+}
+button, [type="submit"] {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+}
+.scrolltop {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+}
+#contact-message-contact-us-form {
+  background: #000;
+  padding: 20px;
+}
+#block-officeaddress {
+  line-height: 50px;
+  padding: 40px 0;
+}
+#block-officeaddress .field--name-body span {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%), radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  padding: 7px 10px;
+  border-radius: 20px;
+}
+#block-officeaddress .field--name-body span i {
+  font-size: 14px;
+}
+.search-box-content input[type="search"] {
+  background: url("../images/search-new.png") top right no-repeat;
+  background-size: contain;
+}
+
+.Frontpage-about .field--name-body p {
+  background-image: linear-gradient(to right,#cb9b51 0,#f6e27a 22%,#B88940 45%,#f6f2c0 50%,#B88940 55%,#f6e27a 78%,#cb9b51 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+  font-weight: 900;
+  font-size: 18px;
+}

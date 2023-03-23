@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * PWA hooks.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function pwa_page_attachments(array &$attachments) {
+  if (!\Drupal::currentUser()->hasPermission('access content')) {
+    return;
+  }
+
+  $attachments['#attached']['library'][] = 'pwa/serviceworker';
+
+  $config = \Drupal::config('pwa.config');
+  $cross_origin = $config->get('cross_origin');
+
+  $manifest_link = [
+    '#tag' => 'link',
+    '#attributes' => [
+      'rel' => 'manifest',
+      'href' => Url::fromRoute('pwa.manifest')->toString(),
+    ],
+  ];
+
+  // Pass credentials if the site is behind HTTP auth.
+  if ($cross_origin) {
+    $manifest_link['#attributes']['crossorigin'] = 'use-credentials';
+  }
+
+  $attachments['#attached']['html_head'][] = [$manifest_link, 'manifest'];
+
+  $theme_color = [
+    '#tag' => 'meta',
+    '#attributes' => [
+      'name' => 'theme-color',
+      'content' => $config->get('theme_color'),
+    ],
+  ];
+  $attachments['#attached']['html_head'][] = [$theme_color, 'theme_color'];
+
+  /** @var callable */
+  $getCacheVersionCallable = \Drupal::service('controller_resolver')
+    ->getControllerFromDefinition(
+      '\Drupal\pwa\Controller\PWAController::pwa_get_cache_version'
+    );
+
+  // Add cache version to drupal settings.
+  $attachments['#attached']['drupalSettings']['pwa']['cache_version'] =
+    \call_user_func($getCacheVersionCallable);
+
+  $installPath = '/serviceworker-pwa';
+  \Drupal::moduleHandler()->alter('pwa_install_path', $installPath);
+
+  $attachments['#attached']['drupalSettings']['pwa']['installPath'] = $installPath;
+  $scope = $config->get('scope');
+  $attachments['#attached']['drupalSettings']['pwa']['scope'] = !empty($scope) ? $scope : NULL;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function pwa_theme() {
+  return [
+    'offline' => [
+      'variables' => [],
+    ],
+  ];
+}
+
+/**
+ * Check data from input.
+ */
+function pwa_str_to_list($string) {
+  $list = $string ? explode("\n", $string) : [];
+  $list = array_map('trim', $list);
+  return array_filter($list, 'strlen');
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function pwa_user_login(AccountInterface $account) {
+  \Drupal::service('session')->set('pwa_reset', TRUE);
+}

@@ -1,0 +1,47 @@
+pwa.manifest:
+  path: /manifest.json
+  defaults:
+    _controller: '\Drupal\pwa\Controller\PWAController::pwa_manifest'
+  requirements:
+    _permission: 'access content'
+pwa.serviceworker_file_data:
+  path: /serviceworker-pwa
+  defaults:
+    _controller: '\Drupal\pwa\Controller\PWAController::pwa_serviceworker_file_data'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _permission: 'access content'
+pwa.offline_page:
+  path: /offline
+  defaults:
+    _controller: '\Drupal\pwa\Controller\PWAController::pwa_offline_page'
+    _title: 'Offline'
+  requirements:
+    _permission: 'access content'
+pwa.module_active:
+  path: /pwa/module-active
+  defaults:
+    _controller: '\Drupal\pwa\Controller\PWAController::pwa_module_active_page'
+  requirements:
+    _permission: 'access content'
+pwa.config:
+  path: '/admin/config/services/pwa'
+  defaults:
+    _form: '\Drupal\pwa\Form\BasicConfigurationForm'
+    _title: 'Progressive Web App'
+  requirements:
+    _permission: 'administer pwa'
+pwa.config_manifest:
+  path: '/admin/config/services/pwa/manifest'
+  defaults:
+    _form: '\Drupal\pwa\Form\ManifestConfigurationForm'
+    _title: 'Manifest'
+  requirements:
+    _permission: 'administer pwa'
+pwa.config_serviceworker:
+  path: '/admin/config/services/pwa/serviceworker'
+  defaults:
+    _form: '\Drupal\pwa\Form\ServiceWorkerConfigurationForm'
+    _title: 'Service Worker'
+  requirements:
+    _permission: 'administer pwa'
