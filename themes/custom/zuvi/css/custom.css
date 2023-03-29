@@ -147,3 +147,6 @@ button, [type="submit"] {
   font-weight: 900;
   font-size: 18px;
 }
+.field--name-field-media-video-file video {
+  width: 100%;
+}
