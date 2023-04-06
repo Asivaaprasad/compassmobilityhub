@@ -4,17 +4,18 @@
 
 # Pantheon commits a settings.php for environment-specific settings.
 # Place local settings in settings.local.php
-/web/sites/*/settings.local.php
-/web/sites/*/services*.yml
-!/web/sites/*/services.pantheon.*.yml
-!/web/sites/*/services.yml
+/sites/*/settings.local.php
+/sites/*/services*.yml
+!/sites/*/services.pantheon.*.yml
+!/sites/*/services.yml
+/sites/*/settings.php
 
 # Ignore paths that contain user-generated content.
-/web/sites/*/files
-/web/sites/*/private
+/sites/*/files
+/sites/*/private
 
 # Ignore SimpleTest multi-site environment.
-/web/sites/simpletest
+/sites/simpletest
 
 
 # Ignore custom modules managed by Composer.
