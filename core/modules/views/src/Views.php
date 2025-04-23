@@ -188,6 +188,8 @@ class Views {
   }
 
   /**
+   * Gets view and display IDs for a given setting in display plugin settings.
+   *
    * Return a list of all view IDs and display IDs that have a particular
    * setting in their display's plugin settings.
    *
@@ -198,10 +200,10 @@ class Views {
    *   A list of arrays containing the $view_id and $display_id.
    *
    * @code
-   * array(
-   *   array($view_id, $display_id),
-   *   array($view_id, $display_id),
-   * );
+   * [
+   *   [$view_id, $display_id],
+   *   [$view_id, $display_id],
+   * ];
    * @endcode
    */
   public static function getApplicableViews($type) {
@@ -276,8 +278,9 @@ class Views {
   }
 
   /**
-   * Returns an array of view as options array, that can be used by select,
-   * checkboxes and radios as #options.
+   * Returns an array of view as options array.
+   *
+   * This array can be used by select, checkboxes and radios as #options.
    *
    * @param bool $views_only
    *   If TRUE, only return views, not displays.
@@ -409,8 +412,9 @@ class Views {
   }
 
   /**
-   * Provide a list of views handler types used in a view, with some information
-   * about them.
+   * Provide a list of views handler types used in a view.
+   *
+   * Also provides some information about them.
    *
    * @return array
    *   An array of associative arrays containing:
@@ -428,7 +432,7 @@ class Views {
     if (!isset(static::$handlerTypes)) {
       static::$handlerTypes = [
         'field' => [
-          // title
+          // Title
           'title' => static::t('Fields'),
           // Lowercase title for mid-sentence.
           'ltitle' => static::t('fields'),

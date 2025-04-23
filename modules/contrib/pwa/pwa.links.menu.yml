@@ -8,8 +8,3 @@ pwa.config_manifest:
   description: 'Configure Progressive Web App manifest'
   parent: pwa.config
   route_name: pwa.config_manifest
-pwa.config_serviceworker:
-  title: 'Service Worker'
-  description: 'Configure Progressive Web App Service Worker'
-  parent: pwa.config
-  route_name: pwa.config_serviceworker

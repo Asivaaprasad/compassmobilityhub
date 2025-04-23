@@ -2,62 +2,64 @@ pwa.config:
   type: config_object
   label: 'PWA config'
   mapping:
-    site_name:
-      type: text
+    name:
+      type: label
       label: 'Web app name'
     short_name:
-      type: text
+      type: label
       label: 'Short name'
+    app_id:
+      type: label
+      label: 'App id'
     description:
       type: text
       label: 'Description'
     start_url:
-      type: text
+      type: label
       label: 'Start url'
     scope:
-      type: text
+      type: label
       label: 'Scope'
     lang:
-      type: text
+      type: label
       label: 'Language'
+    dir:
+      type: label
+      label: 'Text direction'
+    orientation:
+      type: string
+      label: 'Orientation'
+    categories:
+      type: sequence
+      label: 'Categories'
+      sequence:
+        type: string
+        label: 'Category'
     theme_color:
-      type: text
+      type: string
       label: 'Theme color'
     background_color:
-      type: text
+      type: string
       label: 'Background color'
     display:
-      type: text
+      type: string
       label: 'Display type'
-    default_image:
-      type: text
-      label: 'Use the theme image'
-    urls_to_cache:
-      type: text
-      label: 'URLs to cache'
-    urls_to_exclude:
-      type: text
-      label: 'URLs exclude'
-    offline_page:
-      type: path
-      label: 'Offline page path'
-    cache_version:
-      type: text
-      label: 'Cache version'
     cross_origin:
       type: boolean
       label: 'The site is behind HTTP basic authentication'
       translatable: false
-    skip_waiting:
-      type: boolean
-      label: 'An updated SW immediately activates after installing'
-      translatable: false
-    image:
-      type: text
-      label: 'Image path'
-    image_small:
-      type: text
-      label: 'Small image path'
-    image_very_small:
-      type: text
-      label: 'Very small image path'
+    image_fid:
+      type: integer
+      label: 'Image ID'
+    image_small_fid:
+      type: integer
+      label: 'Small Image ID'
+    image_very_small_fid:
+      type: integer
+      label: 'Very Small Image ID'
+    manifest_path_mode:
+      type: string
+      label: 'Manifest path inclusion mode'
+    manifest_paths:
+      type: string
+      label: 'Paths to add the manifest on'

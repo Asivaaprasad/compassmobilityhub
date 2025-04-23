@@ -104,8 +104,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function &getTables();
 
   /**
-   * Returns a reference to the union queries for this query. This include
-   * queries for UNION, UNION ALL, and UNION DISTINCT.
+   * Returns a reference to the union queries for this query.
+   *
+   * This includes queries for UNION, UNION ALL, and UNION DISTINCT.
    *
    * Because this method returns by reference, alter hooks may edit the tables
    * array directly to make their changes. If just adding union queries,
@@ -160,7 +161,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return array
    *   An associative array of all placeholder arguments for this query.
    */
-  public function getArguments(PlaceholderInterface $queryPlaceholder = NULL);
+  public function getArguments(?PlaceholderInterface $queryPlaceholder = NULL);
 
   /* Query building operations */
 
@@ -327,7 +328,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Join against another table in the database.
    *
-   * This method does the "hard" work of queuing up a table to be joined against.
+   * This method does the "hard" work of queueing up a table to be joined against.
    * In some cases, that may include dipping into the Schema API to find the necessary
    * fields on which to join.
    *
@@ -489,7 +490,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return bool
    *   TRUE if the validation was successful, FALSE if not.
    */
-  public function preExecute(SelectInterface $query = NULL);
+  public function preExecute(?SelectInterface $query = NULL);
 
   /**
    * Runs the query against the database.

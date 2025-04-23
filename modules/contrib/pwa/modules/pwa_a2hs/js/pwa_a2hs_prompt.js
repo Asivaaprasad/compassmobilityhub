@@ -1,4 +1,5 @@
-(function ($, Drupal) {
+(function ($, Drupal, once) {
+  'use strict'
 
   Drupal.behaviors.pwa_a2hs_prompt = {
     attach: function(context, settings) {
@@ -7,6 +8,10 @@
 
       // Create a button to be populated later on.
       let button = document.createElement("button");
+
+      // Add classes that core and contrib themes use to style buttons for
+      // consistency.
+      $(button).addClass(['button', 'button--primary']);
 
       window.addEventListener('beforeinstallprompt', (e) => {
         // Prevent the mini info bar from showing.
@@ -19,7 +24,7 @@
         button.innerHTML = button_text;
 
         // Use jQuery once() so the button doesn't get added multiple times.
-        $('.pwa-a2hs', context).once('showButton').each(function () {
+        $(once('showButton', '.pwa-a2hs', context)).each(function () {
           $(this).removeClass('pwa-a2hs hidden').addClass('pwa-a2hs-active show').append(button);
         });
       });
@@ -43,4 +48,4 @@
     }
   };
 
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

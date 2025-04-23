@@ -8,16 +8,24 @@ namespace Drupal\pwa;
 interface ManifestInterface {
 
   /**
-   * Build the manifest json string based on the configuration.
+   * Build the manifest array  based on the configuration.
+   *
+   * @return array
+   *   Manifest array data.
+   */
+  public function toArray(): array;
+
+  /**
+   * Retrieve the manifest data as a json.
    *
    * @return string
-   *   Manifest JSON string.
+   *   Manifest json data.
    */
-  public function getOutput();
+  public function toJson(): string;
 
   /**
    * Deletes the images that are used for the manifest file.
    */
-  public function deleteImage();
+  public function deleteImages();
 
 }

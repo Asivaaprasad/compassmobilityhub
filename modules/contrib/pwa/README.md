@@ -11,10 +11,6 @@ INTRODUCTION
 ------------
 Progressive Web Apps are:
 
- * Reliable — Load instantly and never show an "Offline" screen to the visitor,
-  even in uncertain network conditions.
- * Fast — Respond quickly to user interactions with silky smooth animations
-  and no janky scrolling.
  * Engaging — Feel like a natural app on the device, with an immersive user
   experience.
   This new level of quality allows Progressive Web Apps to earn a place on the
@@ -24,13 +20,30 @@ Progressive Web Apps are:
 
    In general a PWA depends on the following technologies to be available:
 
-   Service Workers
    Web App Manifest
    HTTPS
+   (Service Workers)
 
- What does the PWA Drupal module do?
-  The main benefit of this module is the use of Service Worker for caching and
- offline capabilities. Once the Service Worker is active, page loading is faster:
+Service Workers are not a must, but make your Website:
+ * Reliable — Load instantly and never show an "Offline" screen to the visitor,
+  even in uncertain network conditions.
+ * Fast — Respond quickly to user interactions with silky smooth animations
+  and no janky scrolling.
+
+What does the PWA Drupal module do?
+
+The main functionality of this module is, to provide a configurable
+manifest.json file to make the website installable on supporting mobile devices.
+Out of the box, the module fulfills enough PWA requirements that the "add to
+home screen" prompt is automatically triggered on MOST browsers.
+
+**Note**, that some browsers require an active service worker to show the "add
+to home screen" prompt (e.g. Firefox).
+
+The service worker functionality is split into its own submodule
+"pwa_service_worker" the main benefits of this submodule is the use of
+Service Worker for caching and offline capabilities. Once the Service Worker is
+active, page loading is faster:
 
  * All JS and CSS files will always be served from cache while being refreshed
   in the background. Same thing as Stale While Revalidate in Varnish.
@@ -39,18 +52,21 @@ Progressive Web Apps are:
  * Images are cached unless the save-data header is detected in order to be
   mindful of bandwidth usage and cache size. A fallback image should appear for
   any uncached image.
- The module will also create a configurable manifest.json file to make the
- website installable on supporting mobile devices. Out of the box, the module
- fulfills enough PWA requirements that the "add to home screen" prompt is
- automatically triggered when a visitor returns often enough to your website.
-  It provides a perfect PWA Lighthouse audit score by default as well.
 
-REQUIREMENTS
+Once both modules are active, a perfect PWA Lighthouse audit score will also be
+provided.
+
+**Note**, that the main reason the service_worker is split from the main module
+are the amount of inefficiencies it has. Please visit
+https://www.drupal.org/project/pwa/issues/3377120 for more information on the
+issues.
+
+REQUIREMENTS (pwa_service_worker only)
 ------------
 
-  Service workers are only available to "secure origins" (HTTPS sites, basically)
-  http://localhost is also considered a secure origin see.
-  https://www.chromium.org/blink/serviceworker/service-worker-faq
+  Service workers are only available to "secure origins"
+  (HTTPS sites, basically) http://localhost is also considered a secure origin
+  see https://www.chromium.org/blink/serviceworker/service-worker-faq.
 
 INSTALLATION
 ------------
@@ -78,8 +94,6 @@ By default, the manifest has the following properties:
  * name: from variable_get('site_name')
  * short_name: from variable_get('site_name')
  * description: blank
- * lang: default site language
- * dir: default site language direction
  * background_color: white
  * theme_color: white
  * start_url: /
@@ -101,3 +115,5 @@ Current maintainers:
  * AlexBorsody - (https://www.drupal.org/u/alexborsody)
  * rupl - (https://www.drupal.org/u/rupl)
  * nod - (https://www.drupal.org/u/nod_)
+ * Anybody - (https://www.drupal.org/u/anybody)
+ * Grevil - (https://www.drupal.org/project/pwa/issues/3377120)

@@ -4,10 +4,9 @@ namespace Drupal\pwa;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -21,13 +20,6 @@ class Manifest implements ManifestInterface {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   private $configFactory;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  private $languageManager;
 
   /**
    * The module handler.
@@ -51,158 +43,147 @@ class Manifest implements ManifestInterface {
   private $themeManager;
 
   /**
+   * The file entity storage.
+   *
+   * @var \Drupal\file\FileStorageInterface
+   */
+  protected $fileStorage;
+
+  /**
    * Constructor; saves dependencies.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
-   *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
-   *   The language manager.
-   *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The Symfony request stack.
-   *
    * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The file entity storage.
    */
   public function __construct(
-    ConfigFactoryInterface    $configFactory,
-    LanguageManagerInterface  $languageManager,
-    ModuleHandlerInterface    $moduleHandler,
-    RequestStack              $requestStack,
-    ThemeManagerInterface     $themeManager
+    ConfigFactoryInterface $configFactory,
+    ModuleHandlerInterface $moduleHandler,
+    RequestStack $requestStack,
+    ThemeManagerInterface $themeManager,
+    EntityTypeManagerInterface $entityTypeManager,
   ) {
-    $this->configFactory    = $configFactory;
-    $this->languageManager  = $languageManager;
-    $this->moduleHandler    = $moduleHandler;
-    $this->requestStack     = $requestStack;
-    $this->themeManager     = $themeManager;
+    $this->configFactory = $configFactory;
+    $this->moduleHandler = $moduleHandler;
+    $this->requestStack  = $requestStack;
+    $this->themeManager  = $themeManager;
+    $this->fileStorage   = $entityTypeManager->getStorage('file');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getOutput() {
+  public function toArray(): array {
     // Get values.
-    $values = $this->getCleanValues();
-      $manifest_data['orientation'] = 'portrait';
-    if (isset($values['site_name'])) {
-      $manifest_data['name'] = $values['site_name'];
-    }
-    if (isset($values['short_name'])) {
-      $manifest_data['short_name'] = $values['short_name'];
-    }
-    if (isset($values['display'])) {
-      $manifest_data['display'] = $values['display'];
-    }
-    if (isset($values['background_color'])) {
-      $manifest_data['background_color'] = $values['background_color'];
-    }
-    if (isset($values['theme_color'])) {
-      $manifest_data['theme_color'] = $values['theme_color'];
-    }
-    if (isset($values['description'])) {
-      $manifest_data['description'] = $values['description'];
-    }
-    if (isset($values['lang'])) {
-      $manifest_data['lang'] = $values['lang'];
-    }
-    if (isset($values['image'])) {
-      $manifest_data['icons'][0]['src'] = $values['image'];
-      $manifest_data['icons'][0]['sizes'] = '512x512';
-      $manifest_data['icons'][0]['type'] = 'image/png';
-      $manifest_data['icons'][0]['purpose'] = 'any maskable';
-    }
-    if (isset($values['image_small'])) {
-      $manifest_data['icons'][1]['src'] = $values['image_small'];
-      $manifest_data['icons'][1]['sizes'] = '192x192';
-      $manifest_data['icons'][1]['type'] = 'image/png';
-      $manifest_data['icons'][1]['purpose'] = 'any maskable';
-    }
-    if (isset($values['image_very_small'])) {
-      $manifest_data['icons'][2]['src'] = $values['image_very_small'];
-      $manifest_data['icons'][2]['sizes'] = '144x144';
-      $manifest_data['icons'][2]['purpose'] = 'any maskable';
-
-    }
-    if (isset($values['start_url'])) {
-      $manifest_data['start_url'] = $values['start_url'];
-    }
-    if (isset($values['scope'])) {
-      $manifest_data['scope'] = $values['scope'];
-    }
-
-    $this->moduleHandler->alter('pwa_manifest', $manifest_data);
-    $this->themeManager->alter('pwa_manifest', $manifest_data);
-
-    return Json::encode($manifest_data);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteImage() {
     $config = $this->configFactory->get('pwa.config');
-    $image = $config->get('image');
-    // Image exists and is NOT default.
-    if (!empty($image) && $image[0] == '/') {
-      // Image.
-      $path = getcwd() . $image;
-      unlink($path);
-      // Image_small.
-      unlink($path . 'copy.png');
-      // Image_very_small.
-      unlink($path . 'copy2.png');
-    }
-  }
+    $httpHost = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+    $modulePath = $httpHost . '/' . $this->moduleHandler->getModule('pwa')->getPath();
 
-  /**
-   * Checks the values in config and add default value if necessary.
-   *
-   * @return array
-   *   Values from the configuration.
-   *
-   * @todo Can we use the injected 'theme.manager' service rather than
-   *   theme_get_setting() and then do
-   *   $this->themeManager->getActiveTheme()->getLogo()?
-   */
-  private function getCleanValues() {
-    // Set defaults.
-    $lang = $this->languageManager->getDefaultLanguage();
-    $site_name = $this->configFactory->get('system.site')->get('name');
-    $path = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost() .
-      '/' . $this->moduleHandler->getModule('pwa')->getPath();
-    $output = [
-      'site_name' => $site_name,
-      'short_name' => $site_name,
-      'background_color' => '#ffffff',
-      'theme_color' => '#ffffff',
-      'display' => 'standalone',
-      'image' => $path . '/assets/icon-512.png',
-      'image_small' => $path . '/assets/icon-192.png',
-      'image_very_small' => $path . '/assets/icon-144.png',
+    // Define basic and recommended fields:
+    $manifestData = [
+      // Basic fields:
+      'name' => $config->get('name'),
+      'short_name' => $config->get('short_name'),
+      'start_url' => $config->get('start_url'),
+      'display' => $config->get('display'),
+      'id' => $config->get('app_id'),
+      // Recommended fields:
+      'theme_color' => $config->get('theme_color'),
+      'background_color' => $config->get('background_color'),
+      'scope' => $config->get('scope'),
+      'orientation' => $config->get('orientation'),
     ];
 
+    $iconId = $config->get('image_fid');
+
+    // Icon fallback src:
+    $iconSrc = $modulePath . '/assets/icon-512.png';
+    $iconSmallSrc = $modulePath . '/assets/icon-192.png';
+    $iconVerySmallSrc = $modulePath . '/assets/icon-144.png';
+
+    // If the icon file entity exists, use it and its derivatives, as the
+    // App icons:
+    if (!empty($iconId) && ($icon = $this->fileStorage->load($iconId)) !== NULL) {
+      $iconSrc = $httpHost . $icon->createFileUrl();
+      $iconSmallSrc = $httpHost . $this->fileStorage->load($config->get('image_small_fid'))->createFileUrl();
+      $iconVerySmallSrc = $httpHost . $this->fileStorage->load($config->get('image_very_small_fid'))->createFileUrl();
+    }
+
+    $manifestData['icons'] = [
+      0 => [
+        'src' => $iconSrc,
+        'sizes' => '512x512',
+        'type' => 'image/png',
+        'purpose' => 'any',
+      ],
+      1 => [
+        'src' => $iconSmallSrc,
+        'sizes' => '192x192',
+        'type' => 'image/png',
+        'purpose' => 'any',
+      ],
+      2 => [
+        'src' => $iconVerySmallSrc,
+        'sizes' => '144x144',
+        'type' => 'image/png',
+        'purpose' => 'any',
+      ],
+    ];
+
+    // Add optional fields:
+    if (!empty($description = $config->get('description'))) {
+      $manifestData['description'] = $description;
+    }
+    if (!empty($categories = array_filter($config->get('categories')))) {
+      $manifestData['categories'] = $categories;
+    }
+    if (!empty($lang = $config->get('lang'))) {
+      $manifestData['lang'] = $lang;
+    }
+    if (!empty($dir = $config->get('dir'))) {
+      $manifestData['dir'] = $dir;
+    }
+
+    $this->moduleHandler->alter('pwa_manifest', $manifestData);
+    $this->themeManager->alter('pwa_manifest', $manifestData);
+
+    return $manifestData;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toJson(): string {
+    $manifestData = $this->toArray();
+    return Json::encode($manifestData);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function deleteImages() {
     $config = $this->configFactory->get('pwa.config');
-    $config_data = $config->get();
-    foreach ($config_data as $key => $value) {
-      if ($value !== '') {
-        $output[$key] = $value;
+    $imageIds = [];
+    if (!empty($imageId = $config->get('image_fid'))) {
+      $imageIds = [
+        $imageId,
+        $config->get('image_small_fid'),
+        $config->get('image_very_small_fid'),
+      ];
+    }
+    foreach ($imageIds as $imageId) {
+      $imageEntity = $this->fileStorage->load($imageId);
+      if ($imageEntity !== NULL) {
+        $imageEntity->delete();
       }
     }
-
-    // Image from theme.
-    if ($config->get('default_image')) {
-      $image = theme_get_setting('logo.path');
-      $output['image'] = $image;
-      $output['image_small'] = $image;
-      $output['image_very_small'] = $image;
-    }
-
-    return $output;
   }
 
 }

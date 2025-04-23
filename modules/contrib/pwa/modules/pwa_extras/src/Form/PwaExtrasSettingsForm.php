@@ -34,7 +34,8 @@ class PwaExtrasSettingsForm extends ConfigFormBase {
     $form['apple']['touch_icons'] = [
       "#type" => 'checkboxes',
       "#title" => $this->t('Touch Icons'),
-      "#options" => str_replace('<', '&lt;', pwa_extras_apple_touch_icons($mask_color)),
+      // @todo Find a way to properly render these icons on the frontend:
+      "#options" => pwa_extras_apple_touch_icons(),
       '#default_value' => $config->get('touch_icons'),
     ];
 
@@ -43,20 +44,21 @@ class PwaExtrasSettingsForm extends ConfigFormBase {
       "#title" => $this->t('Mask icon color'),
       "#description" => $this->t('The color scheme of OS pinned tab mask icon.'),
       '#default_value' => $mask_color,
-        '#states' => [
+      '#states' => [
         'invisible' => [
           ':input[value="touch-icon-mask"]' => ['checked' => FALSE],
-         ],
+        ],
       ],
     ];
 
-    $site_name = $this->config('pwa.config')->get('site_name') ?: $this->config('system.site')->get('name');
+    $site_name = $this->config('pwa.config')->get('name') ?: $this->config('system.site')->get('name');
     $color_select = $config->get('color_select') ?: 'default';
 
     $form['apple']['meta_tags'] = [
       "#type" => 'checkboxes',
       "#title" => $this->t('Meta Tags'),
-      "#options" => str_replace('<', '&lt;', pwa_extras_apple_meta_tags($site_name, $color_select)),
+      // @todo Find a way to properly render these icons on the frontend:
+      "#options" => pwa_extras_apple_meta_tags($site_name, $color_select),
       '#default_value' => $config->get('meta_tags'),
     ];
 
@@ -79,7 +81,9 @@ class PwaExtrasSettingsForm extends ConfigFormBase {
     $form['apple']['home_screen_icons'] = [
       "#type" => 'checkboxes',
       "#title" => $this->t('Add to homescreen icons'),
-      "#options" => str_replace('<', '&lt;', pwa_extras_apple_home_screen_icons()),
+      // @todo Everything inside "#options" is escaped via Html::escape(), hence
+      // these links are not rendered. Find a better way to render them:
+      "#options" => pwa_extras_apple_home_screen_icons(),
       '#default_value' => $config->get('home_screen_icons'),
     ];
 
@@ -109,9 +113,10 @@ class PwaExtrasSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * @return config settings.
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return ['pwa_extras.settings.apple'];
   }
+
 }

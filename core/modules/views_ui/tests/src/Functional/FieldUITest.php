@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -23,12 +25,22 @@ class FieldUITest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view'];
+  public static $testViews = [
+    'test_view',
+    'test_aggregate_count',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'entity_test',
+  ];
 
   /**
    * Tests the UI of field handlers.
    */
-  public function testFieldUI() {
+  public function testFieldUI(): void {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertSession()->pageTextContains('Views test: Name');
@@ -82,12 +94,12 @@ class FieldUITest extends UITestBase {
   /**
    * Tests the field labels.
    */
-  public function testFieldLabel() {
+  public function testFieldLabel(): void {
     // Create a view with unformatted style and make sure the fields have no
     // labels by default.
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['show[wizard_key]'] = 'node';
     $view['page[create]'] = TRUE;
@@ -100,6 +112,25 @@ class FieldUITest extends UITestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
     $this->assertEquals('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
+  }
+
+  /**
+   * Tests the UI of field aggregation settings.
+   */
+  public function testFieldAggregationSettings(): void {
+    $edit_handler_url = 'admin/structure/views/nojs/handler-group/test_aggregate_count/default/field/id';
+    $this->drupalGet($edit_handler_url);
+    $this->submitForm(['options[group_type]' => 'count'], 'Apply');
+    $this->assertSession()
+      ->pageTextNotContains('The website encountered an unexpected error. Try again later.');
+    $this->drupalGet($edit_handler_url);
+    $dropdown = $this->getSession()->getPage()->find('named', ['select', 'options[group_column]']);
+    // Ensure the dropdown for group column exists.
+    $this->assertNotNull($dropdown, 'The dropdown for options[group_column] does not exist.');
+    $this->submitForm(['options[group_type]' => 'count'], 'Apply');
+    // Ensure that there is no error after submitting the form.
+    $this->assertSession()
+      ->pageTextNotContains('The website encountered an unexpected error. Try again later.');
   }
 
 }

@@ -2,13 +2,15 @@
 
 namespace Drupal\video\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\DeprecationHelper;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\File\FileExists;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
-use Drupal\Component\Utility\Random;
-use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Plugin implementation of the 'video' field type.
@@ -17,7 +19,7 @@ use Drupal\Core\File\FileSystemInterface;
  *   id = "video",
  *   label = @Translation("Video"),
  *   description = @Translation("This field stores the ID of an video file or embedded video as an integer value."),
- *   category = @Translation("Reference"),
+ *   category = "reference",
  *   default_widget = "video_embed",
  *   default_formatter = "video_embed_player",
  *   column_groups = {
@@ -159,7 +161,7 @@ class VideoItem extends FileItem {
     // Generate a file entity.
     $destination = $dirname . '/' . $random->name(10, TRUE) . '.mp4';
     $data = $random->paragraphs(3);
-    $file = \Drupal::service('file.repository')->writeData($data, $destination, FileSystemInterface::EXISTS_ERROR);
+    $file = DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '10.3.0', fn() => \Drupal::service('file.repository')->writeData($data, $destination, FileExists::Error), fn() => \Drupal::service('file.repository')->writeData($data, $destination, FileSystemInterface::EXISTS_ERROR));
     $values = [
       'target_id' => $file->id(),
     ];

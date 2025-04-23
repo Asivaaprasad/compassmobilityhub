@@ -393,6 +393,7 @@ class VideoEmbedWidget extends FileWidget {
             $storage = \Drupal::entityTypeManager()->getStorage('file');
             $results = $storage->getQuery()
                     ->condition('uri', $uri)
+                    ->accessCheck(FALSE)
                     ->execute();
             if(!(count($results) > 0)){
               $user = \Drupal::currentUser();

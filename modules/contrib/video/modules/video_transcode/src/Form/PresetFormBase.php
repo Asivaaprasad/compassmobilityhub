@@ -526,6 +526,7 @@ class PresetFormBase extends EntityForm {
 
     // Query the entity ID to see if its in use.
     $result = $query->condition('id', $element['#field_prefix'] . $entity_id)
+      ->accessCheck(FALSE)
       ->execute();
 
     // We don't need to return the ID, only if it exists or not.

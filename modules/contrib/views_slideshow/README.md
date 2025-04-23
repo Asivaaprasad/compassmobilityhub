@@ -2,7 +2,7 @@
 ## INTRODUCTION
 
 Views Slideshow can create slideshows out any content on your Drupal site -
-whether that is images, images on content or full rendered entities. The 
+whether that is images, images on content or full rendered entities. The
 `views_slideshow` module provides a base/plugin system/api for building full
 featured slideshows within the Views UI. This project also includes a module
 implementing that base; `views_slideshow_cycle`. For most users, you'll just
@@ -28,7 +28,7 @@ you create.
 
 ## REQUIREMENTS
 
-* Views Slideshow 8.x-4.x requires Drupal 8 & the core Views module enabled.
+* Views Slideshow 5.x requires Drupal 9+ & the core Views module enabled.
 * There is no upgrade path from Views Slideshow for Drupal 7.
 * Views Slideshow Cycle (Which most users should use) requires some JavaScript
   libraries:
@@ -44,32 +44,54 @@ if required in the Drupal documentation for further information. Note there are
 two modules included in this project; Views Slideshow & Views Slideshow Cycle.
 In most cases you will need/want to enable both of them.
 
+### Library Installation
+Additionally you need a JavaScript library:
+
+* [jQuery HoverIntent](https://github.com/briancherne/jquery-hoverIntent)
+  in `/libraries/jquery.hover-intent` (NOTE: Path changed in 5.x).
+
 If you are using the Views Slideshow Cycle sub-module, you will also need to
 install some JavaScript libraries. The required libraries are:
 
-* [jQuery Cycle 3.x](https://github.com/malsup/cycle) in 
+* [jQuery Cycle 3.x](https://github.com/malsup/cycle) in
   `/libraries/jquery.cycle`
 * [JSON2](https://github.com/douglascrockford/JSON-js) in `/libraries/json2`
-* [jQuery HoverIntent](https://github.com/briancherne/jquery-hoverIntent)
-  in `/libraries/jquery.hoverIntent`
+
 * [jQuery Pause](https://github.com/tobia/Pause) in `/libraries/jquery.pause`
 
-It is recommended to use [Drush](https://drush.org) to automatically install
-the requirements to the right spot. To install all of the libraries to the
-right places, run `drush dl-cycle-lib`.
+Use the [Composer Merge plugin](https://github.com/wikimedia/composer-merge-plugin)
+to include the module's composer.libraries.json. See also Composer Merge documentation.
+Example composer.json edits:
+```
+    "extra": {
+        "installer-paths": {
+            "web/libraries/{$name}": [
+                "type:bower-asset",
+                "type:npm-asset",
+                "type:drupal-library"
+            ]
+        },
+        "merge-plugin": {
+            "include": [
+                "web/modules/contrib/views_slideshow/composer.libraries.json",
+                "web/modules/contrib/views_slideshow/modules/views_slideshow_cycle/composer.libraries.json"
+            ]
+        },
+    }
+```
+and then run `composer require wikimedia/composer-merge-plugin` (and approve running plugin).
 
-If you don't have Drush available, or would prefer to install manually, you can
-do so. An example of code you could run in your Drupal root dir to download to
-the right place:
+Alternatively you can manually install - an example of code you could run in your Drupal root
+dir to download to the right place:
 ```
  mkdir -p libraries/jquery.cycle && cd $_ && wget https://malsup.github.io/jquery.cycle.all.js \
- && mkdir -p ../../libraries/jquery.hoverIntent && cd $_ && wget https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/master/jquery.hoverIntent.js \
+ && mkdir -p ../../libraries/jquery.hover-intent && cd $_ && wget https://raw.githubusercontent.com/briancherne/jquery-hoverIntent/master/jquery.hoverIntent.js \
  && mkdir -p ../../libraries/json2 && cd $_ && wget https://raw.githubusercontent.com/douglascrockford/JSON-js/master/json2.js \
  && mkdir -p ../../libraries/jquery.pause && cd $_ && wget https://raw.githubusercontent.com/tobia/Pause/master/jquery.pause.js
 ```
 
 ## CONFIGURATION
-Configuration is on a per view/display basis. 
+Configuration is on a per view/display basis.
 
 Most standard views settings will work fine in conjunction with Views Slideshow.
 However, grouping may or may not work. Under most use cases the pager should be
@@ -93,14 +115,15 @@ documentation.
 
 Current maintainer:
 
-  * [Neslee Canil Pinto](https://www.drupal.org/u/neslee-canil-pinto)
+  * [Nick Dickinson-Wilde](https://www.drupal.org/u/nickdickinsonwilde)
 
-Past maintainers: 
+Past maintainers:
 
   * [vbouchet](https://www.drupal.org/u/vbouchet) Initial 8.x port
-  
+
   * [Adam Moore](https://www.drupal.org/u/redndahead)
-   
-  * [Nick Wilde](https://www.drupal.org/u/nickwilde)
-  
+
+  * [Neslee Canil Pinto](https://www.drupal.org/u/neslee-canil-pinto)
+
+
  Also, thanks to the many contributors via the issue queues.

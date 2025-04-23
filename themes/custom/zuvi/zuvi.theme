@@ -1,5 +1,6 @@
 <?php
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 /**
  * @file
  * Contains Zuvi theme override and preprocess functions.
@@ -55,14 +56,14 @@ function zuvi_preprocess_page(array &$variables) {
 	$slider_image_id = theme_get_setting('slider_image', 'zuvi');
 	if(!empty($slider_image_id)) {
 		$slider_image_file = File::load($slider_image_id[0]);
-		$slider_image_file->status = FILE_STATUS_PERMANENT;
+		$slider_image_file->status = FileInterface::STATUS_PERMANENT;
 		$slider_image_file->save();
 		$slider_image_file_usage = \Drupal::service('file.usage');
 		$slider_image_file_usage->add($slider_image_file, 'zuvi', 'theme', $slider_image_id[0]);
 	}
 	if(!empty($slider_image_file)) {
-		$imageuri = $slider_image_file->getFileUri();
-		$variables['slider_image_path'] = file_create_url($imageuri);
+		$variables['slider_image_path'] = \Drupal::service('file_url_generator')
+    ->generateAbsoluteString($slider_image_file->getFileUri());
 	}
 }
 

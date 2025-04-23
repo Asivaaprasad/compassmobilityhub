@@ -3,14 +3,23 @@
  * Colorbox JS.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once) {
 
   'use strict';
 
   Drupal.behaviors.initColorbox = {
     attach: function (context, settings) {
-      if (!$.isFunction($.colorbox) || typeof settings.colorbox === 'undefined') {
+      if (typeof $.colorbox !== 'function' || typeof settings.colorbox === 'undefined') {
         return;
+      }
+
+      // The colorbox library uses jQuery.isFunction().
+      // This function was removed in jQuery 3.3.0.
+      // This is a workaround to avoid fixing the library.
+      if (!$.isFunction) {
+        $.isFunction = function (obj) {
+          return typeof obj === 'function' || false;
+        };
       }
 
       if (settings.colorbox.mobiledetect && window.matchMedia) {
@@ -23,11 +32,16 @@
       }
 
       settings.colorbox.rel = function () {
-        return $(this).data('colorbox-gallery')
+        return $(this).data('colorbox-gallery');
       };
 
-      $('.colorbox', context)
-        .once('init-colorbox').each(function() {
+      settings.colorbox.html = function () {
+        var $modalContent = $(this).find('> .modal-content');
+        return $modalContent.length ? $(this).find('> .modal-content').children().clone() : false;
+      };
+
+      $(once('init-colorbox', '.colorbox', context))
+        .each(function() {
         // Only images are supported for the "colorbox" class.
         // The "photo" setting forces the href attribute to be treated as an image.
         var extendParams = {
@@ -109,4 +123,4 @@
     }
   }
 
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once);

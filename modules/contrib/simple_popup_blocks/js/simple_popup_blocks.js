@@ -1,4 +1,4 @@
-(function ($, Drupal) {
+(function ($, Drupal, once) {
 
   'use strict'
 
@@ -20,7 +20,7 @@
           allow_cookie = true,
           read_cookie = '',
           cookie_val = 1,
-          cookie_days = values.cookie_expiry || 100,
+          cookie_days = (values.cookie_expiry !== undefined && values.cookie_expiry !== null) ? values.cookie_expiry : 100,
           match = 0,
           css_identity = '',
           spb_popup_id = '',
@@ -51,10 +51,10 @@
           read_cookie = readCookie('spb_' + block_id)
           if (read_cookie) {
             cookie_val = + read_cookie + 1
-            createCookie('spb_' + block_id, cookie_val, 100)
+            createCookie('spb_' + block_id, cookie_val, cookie_days)
           }
           else {
-            createCookie('spb_' + block_id, cookie_val, 100)
+            createCookie('spb_' + block_id, cookie_val, cookie_days)
           }
           // Match cookie
           cookie_val = cookie_val.toString()
@@ -86,11 +86,11 @@
 
             // Create new cookie for popup.
             if (match === 1) {
-              createCookie('spb_time' + block_id, next_popup, 100)
+              createCookie('spb_time' + block_id, next_popup, cookie_days)
             }
           }
           else {
-            createCookie('spb_time' + block_id, next_popup, 100)
+            createCookie('spb_time' + block_id, next_popup, cookie_days)
           }
           }
         }
@@ -110,10 +110,13 @@
         modal_minimized_class = block_id + '-modal-minimized'
         layout_class = '.' + modal_class + ' .spb-popup-main-wrapper'
         // Wrap arround elements
-		$(css_identity + block_id).once().
-          wrap($('<div class="' + modal_class + '"></div>'))
+        once('wrap-arround', css_identity + block_id).forEach(function(elem) {
+          $(elem).wrap($('<div class="' + modal_class + '"></div>'))
+        });
         // Hide the popup initially
-        $('.' + modal_class).once().hide()
+        once('hide-popup', '.' + modal_class).forEach(function(elem) {
+          $(elem).hide()
+        })
 
         // Wrap remaining elements
         if ($(css_identity + block_id).closest('.spb-popup-main-wrapper').length) {
@@ -136,17 +139,14 @@
         // Minimize button wrap
         if (values.minimize === "1") {
           $("#"+spb_popup_id + " .spb-controls").
-            prepend($('<span class="' + modal_minimize_class +
-              ' spb_minimize">-</span>'))
+            prepend($('<button type="button" aria-label="Dismiss modal" class="' + modal_minimize_class + ' spb_minimize">&minus;</button>'))
           $('.' + modal_class).
-            before($('<span class="' + modal_minimized_class +
-              ' spb_minimized"></span>'))
+            before($('<button type="button" aria-label="Open modal" class="' + modal_minimized_class + ' spb_minimized">&plus;</button>'))
         }
         // Close button wrap
         if (values.close == 1) {
           $("#"+spb_popup_id + " .spb-controls").
-            prepend($('<span class="' + modal_close_class +
-              ' spb_close">&times;</span>'))
+            prepend($('<button type="button" aria-label="Close modal" class="' + modal_close_class + ' spb_close">&times;</button>'))
         }
         // Overlay
         if (values.overlay == 1) {
@@ -155,7 +155,7 @@
         // Inject layout class.
         switch (values.layout) {
           // Top left.
-          case '0':
+          case 0:
             $(layout_class).addClass('spb_top_left')
             $(layout_class).css({
               'width': values.width,
@@ -226,6 +226,7 @@
         // Automatic trigger with delay
         if (values.trigger_method == 0 && values.delay > 0) {
           delays = values.delay * 1000
+          $(css_identity + block_id).show()
           $('.' + modal_class).delay(delays).fadeIn('slow')
             if (values.overlay == 1) {
               setTimeout(stopTheScroll, delays)
@@ -318,7 +319,7 @@
       'overflow': 'hidden',
     });
 
-    $('input:text').focus();
+    $('.simple-popup-blocks-global input:text').focus();
   }
 
   // Enable the scrolling while overlay inactive
@@ -357,4 +358,4 @@
     return null
   }
 
-})(jQuery, Drupal)
+})(jQuery, Drupal, once)

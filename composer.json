@@ -16,26 +16,30 @@
     "require": {
         "pantheon-upstreams/upstream-configuration": "dev-main",
         "composer/installers": "^1.9",
-        "drupal/core-composer-scaffold": "9.5.5",
-        "drupal/core-recommended": "9.5.5",
         "pantheon-systems/drupal-integrations": "^9",
         "cweagans/composer-patches": "^1.7",
-        "drush/drush": "^11 || ^12",
-        "drupal/views_slideshow": "^4.8",
+        "drupal/views_slideshow": "^5.0",
         "drupal/animate_any": "^1.6",
-        "drupal/colorbox": "^1.10",
-        "drupal/simple_popup_blocks": "^2.8",
+        "drupal/colorbox": "^2.1",
+        "drupal/simple_popup_blocks": "^3.5",
         "drupal/contact_block": "^1.6",
-        "drupal/pathauto": "^1.10",
-        "drupal/pwa": "^1.5",
-        "drupal/admin_toolbar": "^3.1",
+        "drupal/pwa": "^2.1@beta",
+        "drupal/admin_toolbar": "^3.5",
         "drupal/fontawesome": "^2.25",
-        "drupal/core-project-message": "9.5.5",
         "drupal/video": "^3.0",
-        "drupal/smtp": "^1.2"
+        "drupal/smtp": "^1.2",
+        "drupal/upgrade_status": "^4.3",
+        "drupal/zuvi": "^10.2",
+        "drupal/stable": "^2.0",
+        "drupal/ctools": "^4.1",
+        "drush/drush": "^12",
+        "drupal/pathauto": "^1.13"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.2"
+        "drupal/core-dev": "10.3.14",
+        "drupal/core-recommended": "10.4.6",
+        "drupal/core-composer-scaffold": "10.4.6",
+        "drupal/core-project-message": "10.4.6"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -91,7 +95,9 @@
             "drupal/core-composer-scaffold": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
-            "drupal/core-project-message": true
+            "drupal/core-project-message": true,
+            "php-http/discovery": true,
+            "tbachert/spi": true
         }
     }
 }

@@ -3,6 +3,6 @@ pwa_a2hs_prompt:
   js:
     js/pwa_a2hs_prompt.js: {}
   dependencies:
-    - core/drupalSettings
+    - core/drupal
     - core/jquery
-    - core/jquery.once
+    - core/once

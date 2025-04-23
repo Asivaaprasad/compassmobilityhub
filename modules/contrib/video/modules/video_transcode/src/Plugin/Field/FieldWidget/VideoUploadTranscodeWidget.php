@@ -22,13 +22,13 @@ class VideoUploadTranscodeWidget extends VideoUploadWidget {
    * Form API callback.
    *
    * Ensures that a size has been entered and that it can be parsed by
-   * \Drupal\Component\Utility\Bytes::toInt().
+   * \Drupal\Component\Utility\Bytes::toNumber().
    *
    * This function is assigned as an #element_validate callback in
    * settingsForm().
    */
   public static function validateMaxFilesize($element, FormStateInterface $form_state) {
-    if (!empty($element['#value']) && (Bytes::toInt($element['#value']) == 0)) {
+    if (!empty($element['#value']) && (Bytes::toNumber($element['#value']) == 0)) {
       $form_state->setError($element, t('The option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).'));
     }
   }
